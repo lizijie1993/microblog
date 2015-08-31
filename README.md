@@ -8,4 +8,4 @@
 * node：v0.12.6
 * npm：2.11.2
 * express：4.13.1
-* bootstrap:3.1.1
+* bootstrap：3.1.1
