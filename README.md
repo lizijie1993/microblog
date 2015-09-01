@@ -15,7 +15,7 @@
 
 ### 路由规划
 路由是网站的骨架，因为它处于整个架构的枢纽位置，是各个接口的粘合剂。因此，在完成网站功能分析后，应优先考虑路由的规划。  
-路由规划的基本思路，与书上保持一致，本实例仅修改了路由的写法，思路参照 [step-0](https://github.com/lizijie1993/node_microblog/tree/step-0)。
+路由规划的基本思路，与书上保持一致，本实例仅修改了路由的写法，思路参照 [step-0](https://github.com/lizijie1993/node_microblog/tree/step-0#路由控制)。
 
 修改app.js
 
