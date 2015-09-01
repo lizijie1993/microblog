@@ -36,6 +36,7 @@ app.get('/list',function(req,res){
 
 //视图助手
 var util = require('util');
+//
 app.locals.inspect=function(obj){
   return util.inspect(obj,true);
 };
