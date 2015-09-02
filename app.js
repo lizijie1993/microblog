@@ -4,17 +4,14 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var crypto = require('crypto');
 
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var settings = require('./settings');
+var flash = require('connect-flash');
 
 var routes = require('./routes/index');
-var user = require('./routes/user');
-var post = require('./routes/post');
-var reg = require('./routes/reg');
-var login = require('./routes/login');
-var logout = require('./routes/logout');
 
 var app = express();
 
@@ -32,6 +29,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(flash());
 app.use(session({
     secret: settings.cookieSecret,
     store: new MongoStore({
@@ -39,12 +37,30 @@ app.use(session({
     })
 }));
 
-app.use('/', routes);
-app.use('/u/:user', user);
-app.use('/post', post);
-app.use('/reg', reg);
-app.use('/login', login);
-app.use('/logout', logout);
+app.use(function(req, res, next) {
+    app.locals.user = function() {
+        return req.session.user;
+    };
+    app.locals.error = function() {
+        var err = req.flash('error');
+        if (err.length) {
+            return err;
+        } else {
+            return null;
+        }
+    };
+    app.locals.success = function() {
+        var succ = req.flash('success');
+        if (succ.length) {
+            return succ;
+        } else {
+            return null;
+        }
+    };
+    next();
+});
+
+app.use(routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

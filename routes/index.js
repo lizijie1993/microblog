@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
+var reg=require('./reg');
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
     res.render('index', {
         title: 'Express'
     });
 });
+
+router.use('/reg',reg);
 
 module.exports = router;
