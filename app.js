@@ -41,20 +41,23 @@ app.use(function(req, res, next) {
     app.locals.user = function() {
         return req.session.user;
     };
-    app.locals.error = function() {
-        var err = req.flash('error');
-        if (err.length) {
-            return err;
-        } else {
-            return null;
-        }
-    };
-    app.locals.success = function() {
-        var succ = req.flash('success');
-        if (succ.length) {
-            return succ;
-        } else {
-            return null;
+    app.locals.regValidate = {
+        statusStr: '',
+        success: function() {
+            var succ = this.statusStr = req.flash('success');
+            if (succ.length) {
+                return succ;
+            } else {
+                return null;
+            }
+        },
+        error: function() {
+            var err = this.statusStr = req.flash('error');
+            if (err.length) {
+                return err;
+            } else {
+                return null;
+            }
         }
     };
     next();

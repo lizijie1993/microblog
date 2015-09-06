@@ -47,19 +47,19 @@ User.get = function(username, callback) {
                 mongodb.close();
                 return callback(err);
             }
-        });
-        //查找 name 属性为 username 的文档
-        collection.findOne({
-            name: username
-        }, function(err, doc) {
-            mongodb.close();
-            if (doc) {
-                //封装文档为 User 对象
-                var user = new User(doc);
-                callback(err, user);
-            } else {
-                callback(err, null);
-            }
+            //查找 name 属性为 username 的文档
+            collection.findOne({
+                name: username
+            }, function(err, doc) {
+                mongodb.close();
+                if (doc) {
+                    //封装文档为 User 对象
+                    var user = new User(doc);
+                    callback(err, user);
+                } else {
+                    callback(err, null);
+                }
+            });
         });
     });
 };

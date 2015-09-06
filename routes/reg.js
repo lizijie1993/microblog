@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var user = require('../models/user');
+var crypto = require('crypto');
+var User = require('../models/user');
 
 router.get('/', function(req, res, next) {
     res.render('reg', {
@@ -19,7 +20,7 @@ router.post('/', function(req, res, next) {
 
     var newUser = new User({
         name: req.body.username,
-        pasword: password
+        password: password
     });
 
     User.get(newUser.name, function(err, user) {
