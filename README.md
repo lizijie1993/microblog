@@ -19,7 +19,8 @@
 
 1. [step-0](https://github.com/lizijie1993/node_microblog/tree/step-0)：对应书本第五章5.2-5.4节，修正了 **建立工程** 、 **路由控制** 、 **模板引擎** 的代码；
 2. [step-1](https://github.com/lizijie1993/node_microblog/tree/step-1)：对应书本第五章5.5节，修正了 **路由规划** 、 **使用Bootstrap** 的代码；
-3. step-2：对应书本第五章5.6节（暂未完成）。
+3. [step-2](https://github.com/lizijie1993/node_microblog/tree/step-2)：对应书本第五章5.6节，修正了 **连接数据库** 、 **会话支持** 、 **注册登录** 的代码；
+4. [step-3](https://github.com/lizijie1993/node_microblog/tree/step-3)：对应书本第五章5.7节，修正了 **发表微博** 、 **用户页面** 、 **首页** 的代码。
 
 实例中的源码，均可在本仓库的各个分支中下载。主分支将包含最终完成的代码。
 
