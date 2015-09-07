@@ -1,6 +1,7 @@
 <%- include header.ejs %>
 
-<div class="hero-unit">
+<% if(!user()) { %>
+<div class="jumbotron">
 	<h1>欢迎来到 Microblog</h1>
 	<p>Microblog 是一个基于 Node.js 的微博系统。</p>
 	<p>
@@ -8,6 +9,11 @@
 		<a href="/reg" class="btn btn-large">立即注册</a>
 	</p>
 </div>
+
+<% } else { %>
+<%- include say.ejs %>
+<% } %>
+<%- include post.ejs %>
 
 <div class="row">
 	<div class="col-xs-4">
