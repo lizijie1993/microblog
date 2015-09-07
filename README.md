@@ -1,7 +1,8 @@
-# Node.js基础开发指南实例
+# Node.js基础开发指南实例——Step-2
 
-## 为什么要写这个?
-[《Node.js基础开发指南》](http://book.douban.com/subject/10789820/)是我看的第一本node.js的书。个人感觉，这是一本非常不错的入门书！之后一段时间没有使用node.js，对其中的很多东西印象不深了，所以重新翻看了一遍。但由于各工具更新太快（express、ejs等），书中的案例已经无法正常运行。因此，在此建立以目前各工具最新版本为基础的实例，配合自己制作的过程的记录，希望能给原书读者的学习带来便利，同时方便自己总结学习的成果。
+## 本部分简介
+
+本部分对应书本第五章5.6节，对原书中部分写法做了新版本的修正。
 
 ## 本实例中各工具版本
 
@@ -10,21 +11,222 @@
 * express：4.13.1
 * bootstrap：3.1.1
 * ejs：version 2
-* mongodb:3.0.6
+* mongodb：3.0.6
 
-## 内容简介
-本实例只包含第五章《使用Node.js进行web开发》部分，对其中无法正常运行的代码进行了修正。书本其余理论部分及有效代码不包括其中，可参照书本原文。
+## 用户注册和登录
 
-本实例内容分为以下几个部分：
+### 访问数据库
 
-1. [step-0](https://github.com/lizijie1993/node_microblog/tree/step-0)：对应书本第五章5.2-5.4节，修正了 **建立工程** 、 **路由控制** 、 **模板引擎** 的代码；
-2. [step-1](https://github.com/lizijie1993/node_microblog/tree/step-1)：对应书本第五章5.5节，修正了 **路由规划** 、 **使用Bootstrap** 的代码；
-3. step-2：对应书本第五章5.6节（暂未完成）。
-
-实例中的源码，均可在本仓库的各个分支中下载。主分支将包含最终完成的代码。
-
-下载代码后，需要在文件夹中通过以下命令安装依赖后才能正常运行：
+安装mongodb依赖：
 
 ```
-$ npm install
+$ npm install mongodb --save
 ```
+
+在node.js环境下，访问mongodb的方法有所改变（[MongoDB 2.0.0 Driver](http://mongodb.github.io/node-mongodb-native/2.0/overview/installing/)）。
+
+修改settings.js如下:
+
+```javascript
+module.exports = {
+    cookieSecret: 'microblogbyvoid',//用于cookie加密
+    url: 'mongodb://localhost/microblog',//Mongodb连接字符串URI
+    db:'microblog'//数据库名称
+};
+```
+
+修改db.js如下：
+
+```javascript
+//创建数据库连接
+var settings = require('../settings');
+var MongoClient = require('mongodb').MongoClient;
+
+var database = {};
+
+database.open = function(fn) {
+    MongoClient.connect(settings.url, function(err, db) {
+        if (fn !== 'undefined' && typeof fn == 'function') {
+            fn(err, db);
+        }
+
+        database.close = function() {
+            db.close();
+        };
+
+        console.log("Connected correctly to server.");
+    });
+};
+
+module.exports = database;
+```
+
+### 会话支持
+
+安装connect-mongo，用于将session持久化保存于mongodb：
+
+```
+$ npm install connect-mongo --save
+```
+
+之后在app.js添加：
+
+```javascript
+var MongoStore = require('connect-mongo')(session);
+
+app.use(session({
+    secret: settings.cookieSecret,
+    store: new MongoStore({
+        db: settings.db
+    })
+}));
+```
+
+修改app.js路由部分如下：
+
+```javascript
+//删除所有routes文件夹内容的引用，仅保留：
+var routes = require('./routes/index');
+
+//路由部分仅保留
+app.use(routes);
+```
+
+其余部分详见本分支routes文件夹各js文件。
+
+### 注册和登录
+
+#### 注册页面
+使用bootstrap3进行了改写，详见[reg.ejs](https://github.com/lizijie1993/microblog/tree/step-2/views/reg.ejs)。（[bootstrap3表单](http://v3.bootcss.com/css/#forms)）
+
+#### 注册响应
+书中使用到 `req.flash`，作用是：通过它保存的变量生命周期是用户当前和下一次请求，之后会被清除。在目前版本的express中已经废弃，需要安装connect-flash：
+
+```
+$ npm install connect-flash --save
+```
+
+之后在app.js添加：
+
+```javascript
+var flash = require('connect-flash');
+
+app.use(flash());
+```
+
+#### 视图交互
+根据[step-0](https://github.com/lizijie1993/microblog/tree/step-0#视图助手)中的说明，app.js中动态视图助手部分修改如下：
+
+```javascript
+app.use(function(req, res, next) {
+    app.locals.user = function() {
+        return req.session.user;
+    };
+    app.locals.regValidate = {
+        statusStr: '',
+        success: function() {
+            var succ = this.statusStr = req.flash('success');
+            if (succ.length) {
+                return succ;
+            } else {
+                return null;
+            }
+        },
+        error: function() {
+            var err = this.statusStr = req.flash('error');
+            if (err.length) {
+                return err;
+            } else {
+                return null;
+            }
+        }
+    };
+    next();
+});
+```
+
+修改导航栏header.ejs
+
+```html
+<ul class="nav navbar-nav">
+    <li class="active"><a href="/">首页<span class="sr-only">(current)</span></a></li>
+    <% if(!user) { %>
+    <li><a href="/login">登入</a></li>
+    <li><a href="/reg">注册</a></li>
+    <% } else { %>
+    <li><a href="/logout">登出</a></li>
+    <% } %>
+</ul>
+```
+
+container之后加上：
+
+```html
+<% if( regValidate.success()) { %>
+    <div class="alert alert-success">
+        <%= regValidate.statusStr %>
+    </div>
+<% } %>
+<% if( regValidate.error()) { %>
+    <div class="alert alert-danger">
+        <%= regValidate.statusStr %>
+    </div>
+<% } %>
+```
+
+注意，**不能**采用如下写法：
+
+```javascript
+//app.js
+app.use(function(req, res, next) {
+    app.locals.user = function() {
+        return req.session.user;
+    };
+    app.locals.success=function() {
+            var succ = req.flash('success');
+            if (succ.length) {
+                return succ;
+            } else {
+                return null;
+            }
+        };
+     app.locals.error=function() {
+            var err = req.flash('error');
+            if (err.length) {
+                return err;
+            } else {
+                return null;
+            }
+        };
+});
+```
+
+```html
+//header.ejs
+<% if( success()) { %>
+    <div class="alert alert-success">
+        <%= success() %>
+    </div>
+<% } %>
+<% if( error()) { %>
+    <div class="alert alert-error">
+        <%= error() %>
+    </div>
+<% } %>
+```
+
+这样修改，**无法获得错误或成功提示**。似乎是因为req.flash()保存的字符串获取一次后就会清空。因此需要将其保存在一个变量中，供公共使用。
+
+### 页面控制权转移
+修改index.js如下：
+
+```javascript
+router.use('/login', checkNotLogin);//新增
+router.use('/login', login);
+
+router.use('/logout', checkLogin);//新增
+router.use('/logout', logout);
+```
+
+## 小结
+本部分主要介绍了如何将原书中连接数据库、会话支持、注册登录修改为当前版本支持的方法。接下来，会介绍第五章5.7节的修改，详见step-3。
