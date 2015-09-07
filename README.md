@@ -10,6 +10,7 @@
 * express：4.13.1
 * bootstrap：3.1.1
 * ejs：version 2
+* mongodb：3.0.6
 
 ## 建立微博网站
 
@@ -169,3 +170,6 @@ bootstrap3中没有bootstrap.responsive.css，而是集成在bootstrap.css中了
 通过 `include` 的方式，将各页面公用的 `header` 和 `footer` 进行引入。
 
 注：顶部导航条代码有所变化，详细介绍见[官网navbar组件](http://v3.bootcss.com/components/#navbar)。
+
+## 小结
+本部分主要介绍了如何将原书中路由规划、界面设计修改为当前版本支持的方法。接下来，会介绍第五章5.6节的修改，详见[step-2](https://github.com/lizijie1993/microblog/tree/step-2)。
