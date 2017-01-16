@@ -5,11 +5,11 @@
 
 ## 本实例中各工具版本
 
-* node：v0.12.6
-* npm：2.11.2
-* express：4.13.1
+* node：v6.9.4
+* npm：3.10.10
+* express：4.14.0
 * bootstrap：3.1.1
-* ejs：version 2
+* ejs：2.5.5
 
 ## 快速开始
 
@@ -86,7 +86,7 @@ module.exports = router;
 ```
 
 对以上改变进行分析：
-根据请求路径，调用不同的middleware；所调用的middleware为 `Router` 的一个实例，根据[官网API](http://expressjs.com/4x/api.html#router)，Router实现了middleware的接口，可以直接在app.use中使用，相当于创建了一个 *小的独立的app* 。users.js中的 '/' 实际是建立在 `app.use` 中 '/users' 路径的基础上的，即匹配绝对路径为'/users/'的路径。
+根据请求路径，调用不同的middleware；所调用的middleware为 `Router` 的一个实例，根据[官网API](http://expressjs.com/en/4x/api.html#router)，Router实现了middleware的接口，可以直接在app.use中使用，相当于创建了一个 *小的独立的app* 。users.js中的 '/' 实际是建立在 `app.use` 中 '/users' 路径的基础上的，即匹配绝对路径为'/users/'的路径。
 
 为了理解路由的问题，可以做一下尝试：
 在app.js中增加：
@@ -99,14 +99,14 @@ app.use('/test', test);
 然后在routers文件夹中，新建test.js:
 
 ```javascript
-var express=require('express');
-var router=express.Router();
+var express = require('express');
+var router = express.Router();
 
 router.get('/page',function(req,res,next){
-     res.send('This is a test page.');
+	res.send('This is a test page.');
 });
 
-module.exports=router;
+module.exports = router;
 ```
 
 保存后，在浏览器中输入http://localhost:3000/test/page，可以看到：
@@ -114,7 +114,6 @@ module.exports=router;
 ```html
 respond with a resource
 ```
-
 
 ## 模板引擎
 模版引擎是一个从页面模版，根据一定的规则生成HTML的工具。  
@@ -126,6 +125,7 @@ respond with a resource
 ![模板引擎在MVC架构中的位置](./README_img/template_1.png)
 
 ### 片段视图
+片段视图就是一个页面的片段，通常是重复的 内容，用于迭代显示。
 书中片段视图部分已经失效。根据目前版本的ejs语法，可以通过嵌套javascript代码实现，现做如下修改：  
 
 1. 删除listitem.ejs
@@ -143,25 +143,24 @@ respond with a resource
 [ejs传送门](https://github.com/mde/ejs)
 
 ### 视图助手
+视图助手的功能是允许在视图中访问一个全局的函数或对象，不用每次调用视图解析的时候单独传入。
 书中视图助手部分已经废弃。根据目前版本的express，可通过[app.locals](http://expressjs.com/4x/api.html#app.locals)来实现，现做修改app.js：
 
 ```javascript
 //app.js
 var util = require('util');
 
-//静态助手
-app.locals.inspect=function(obj){
-  return util.inspect(obj,true);
+app.locals.inspect = function(obj) {
+  return util.inspect(obj, true);
 };
 
-//动态助手
 app.use(function(req, res, next) {
-  app.locals.headers=req.headers;
+  app.locals.headers = req.headers;
   next();
-})
+});
 
-app.get('/helper',function(req,res){
-  res.render('helper',{title:'Helper'});
+app.get('/helper', function(req, res) {
+  res.render('helper', {title: 'Helper'});
 });
 ```
 

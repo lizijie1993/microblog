@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
+var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
@@ -22,35 +22,33 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use('/', index);
 app.use('/users', users);
 
-//test
+// test
 var test = require('./routes/test');
 app.use('/test', test);
 
-//视图片段
+// 视图片段
 app.get('/list',function(req,res){
   res.render('list',{title:'List',items:[1991,'byvoid','express','Node.js']});
 });
 
-//视图助手
+// 视图助手
 var util = require('util');
-//
-app.locals.inspect=function(obj){
-  return util.inspect(obj,true);
+
+app.locals.inspect = function(obj) {
+  return util.inspect(obj, true);
 };
 
 app.use(function(req, res, next) {
-  app.locals.headers=req.headers;
+  app.locals.headers = req.headers;
   next();
-})
-
-app.get('/helper',function(req,res){
-  res.render('helper',{title:'Helper'});
 });
 
-
+app.get('/helper', function(req, res) {
+  res.render('helper', {title: 'Helper'});
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -59,29 +57,15 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user
+// error handler
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
 
 module.exports = app;
