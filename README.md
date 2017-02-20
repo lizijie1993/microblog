@@ -6,12 +6,13 @@
 
 ## 本实例中各工具版本
 
-* node：v0.12.6
-* npm：2.11.2
-* express：4.13.1
-* bootstrap：3.1.1
-* ejs：version 2
-* mongodb：3.0.6
+* node：v6.9.4
+* npm：3.10.10
+* express：4.14.0
+* bootstrap：3.3.5
+* jQuery：1.12.4
+* ejs：2.5.5
+* mongodb：3.4.2
 
 ## 用户注册和登录
 
@@ -23,7 +24,7 @@
 $ npm install mongodb --save
 ```
 
-在node.js环境下，访问mongodb的方法有所改变（[MongoDB 2.0.0 Driver](http://mongodb.github.io/node-mongodb-native/2.0/overview/installing/)）。
+在node.js环境下，访问mongodb的方法有所改变（[quick-star](http://mongodb.github.io/node-mongodb-native/2.2/quick-start/quick-start/)）。
 
 修改settings.js如下:
 
@@ -97,7 +98,7 @@ app.use(routes);
 ### 注册和登录
 
 #### 注册页面
-使用bootstrap3进行了改写，详见[reg.ejs](https://github.com/lizijie1993/microblog/tree/step-2/views/reg.ejs)。（[bootstrap3表单](http://v3.bootcss.com/css/#forms)）
+使用Bootstrap3进行了改写，详见[reg.ejs](https://github.com/lizijie1993/microblog/tree/step-2/views/reg.ejs)。（[bootstrap3表单](http://v3.bootcss.com/css/#forms)）
 
 #### 注册响应
 书中使用到 `req.flash`，作用是：通过它保存的变量生命周期是用户当前和下一次请求，之后会被清除。在目前版本的express中已经废弃，需要安装connect-flash：
@@ -215,7 +216,7 @@ app.use(function(req, res, next) {
 <% } %>
 ```
 
-这样修改，**无法获得错误或成功提示**。似乎是因为req.flash()保存的字符串获取一次后就会清空。因此需要将其保存在一个变量中，供公共使用。
+这样修改，**无法获得错误或成功提示**。因为req.flash()保存的字符串获取一次后就会清空。因此需要将其保存在一个变量中，供公共使用。
 
 ### 页面控制权转移
 修改index.js如下：
