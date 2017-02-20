@@ -8,7 +8,6 @@
 * node：v6.9.4
 * npm：3.10.10
 * express：4.14.0
-* bootstrap：3.1.1
 * ejs：2.5.5
 
 ## 快速开始
