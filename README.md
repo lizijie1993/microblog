@@ -77,8 +77,10 @@ var MongoStore = require('connect-mongo')(session);
 
 app.use(session({
     secret: settings.cookieSecret,
+    resave: false,
+  	saveUninitialized: true,
     store: new MongoStore({
-        db: settings.db
+        url: settings.url
     })
 }));
 ```
