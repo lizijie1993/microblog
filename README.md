@@ -5,12 +5,13 @@
 
 ## 本实例中各工具版本
 
-* node：v0.12.6
-* npm：2.11.2
-* express：4.13.1
-* bootstrap：3.1.1
-* ejs：version 2
-* mongodb：3.0.6
+* node：6.9.4
+* npm：3.10.10
+* express：4.14.0
+* bootstrap：3.3.5
+* jQuery：1.12.4
+* ejs：2.5.5
+* mongodb：3.4.2
 
 ## 发表微博
 
