@@ -55,7 +55,7 @@ Post.get = function(username, callback) {
             // 查找 user 属性为 username 的文档，如果 username 是 null 则匹配全部
             var query = {};
             if (username) {
-                query.user = username;
+                query.name = username;
             }
             collection.find(query).sort({
                 time: -1
@@ -67,7 +67,7 @@ Post.get = function(username, callback) {
                 // 封装 posts 为 Post 对象
                 var posts = [];
                 docs.forEach(function(doc, index) {
-                    var post = new Post(doc.user, doc.post, doc.time);
+                    var post = new Post(doc.name, doc.post, doc.time);
                     posts.push(post);
                 });
                 callback(null, posts);

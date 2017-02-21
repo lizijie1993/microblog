@@ -6,7 +6,7 @@ var logout = require('./logout');
 var post = require('./post');
 var user = require('./user');
 
-var Post=require('../models/post');
+var Post = require('../models/post');
 
 router.get('/', function(req, res, next) {
 	Post.get(null, function(err, posts) {
@@ -31,7 +31,7 @@ router.use('/logout', logout);
 router.use('/post', checkLogin);
 router.use('/post', post);
 
-router.use('/u/:user', user);
+router.use('/u', user);
 
 function checkLogin(req,res,next){
 	if(!req.session.user){
