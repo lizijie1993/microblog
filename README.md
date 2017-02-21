@@ -5,7 +5,7 @@
 
 ## 本实例中各工具版本
 
-* node：v6.9.4
+* node：6.9.4
 * npm：3.10.10
 * express：4.14.0
 * bootstrap：3.3.5
@@ -136,7 +136,7 @@ bootstrap3中没有bootstrap.responsive.css，而是集成在bootstrap.css中了
 ```html
 <%- include header.ejs %>
 
-<div class="hero-unit">
+<div class="jumbotron">
      <h1>欢迎来到 Microblog</h1>
      <p>Microblog 是一个基于 Node.js 的微博系统。</p>
      <p>
